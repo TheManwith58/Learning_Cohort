@@ -1,17 +1,19 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const { auth , JWT_SECRET } = require("./auth");
 const { userModel , todoModel} = require('./db');
 const app = express();
 app.use(express.json());
-mongoose.connect('mongodb+srv://admin:NusCHxlpJhBa7Zqs@cluster0.0lhsllb.mongodb.net/Todo-app-database')
+mongoose.connect('');
 app.post('/signup', async (req, res)=>{
     const username = req.body.username;
     const password  = req.body.password;
+    const hashedPass = await bcrypt.hash(password , 5);
     await userModel.create({
        username : username, 
-       password : password,
+       password : hashedPass,
 
     })
     res.send({
