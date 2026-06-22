@@ -6,10 +6,11 @@ const { auth , JWT_SECRET } = require("./auth");
 const { userModel , todoModel} = require('./db');
 const app = express();
 app.use(express.json());
-mongoose.connect('');
+mongoose.connect('DATABASE_URL');
 app.post('/signup', async (req, res)=>{
     const username = req.body.username;
     const password  = req.body.password;
+    try {
     const hashedPass = await bcrypt.hash(password , 5);
     await userModel.create({
        username : username, 
@@ -18,16 +19,31 @@ app.post('/signup', async (req, res)=>{
     })
     res.send({
         message : "User created successfully"
-    });
+    });}
+    catch (e)
+    {
+        res.send({
+            message : "error while adding to db"
+        })
+    }
 });
+//each request can only send one response
+
 app.post('/signin',async (req, res)=>{
     const username = req.body.username;
     const password = req.body.password;
     const user =await userModel.findOne({
         username: username,
-        password : password,
     })
-    if(user)
+    if(!user)
+    {
+        response.status(200).json({
+            message : "user does not exist"
+        })
+        return ;
+    }
+    const passwordmap = brypt.compare(password ,user.password);
+    if(passwordmap)
     {
         const token = jwt.sign({
             id : user._id.toString(),
