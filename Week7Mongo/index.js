@@ -2,12 +2,26 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const { z } = require('zod');
 const { auth , JWT_SECRET } = require("./auth");
 const { userModel , todoModel} = require('./db');
 const app = express();
 app.use(express.json());
 mongoose.connect('DATABASE_URL');
 app.post('/signup', async (req, res)=>{
+    const required = z.object({
+        username : z.string().max(100).min(3),
+        password : z.string().max(100).min(3)
+
+    })
+    const requirementsuccess = required.safeParse(req.body);
+    if(!requirementsuccess)
+    {
+        res.send({
+            message : "invalid foramt of input"
+        });
+        return;
+    }
     const username = req.body.username;
     const password  = req.body.password;
     try {
