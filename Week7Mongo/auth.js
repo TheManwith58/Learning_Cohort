@@ -7,7 +7,7 @@ function auth(req, res, next)
     if(response)
     {
         res.send({
-            message : "You are authenticated"
+            message : "You are authenticated and  into the system"
         })
         next();
     }
@@ -22,3 +22,4 @@ module.exports = {
     auth, 
     JWT_SECRET
 }
+//made sepaerate authentication middleware 
