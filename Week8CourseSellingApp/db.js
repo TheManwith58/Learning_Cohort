@@ -22,13 +22,21 @@ const admin = new admin({
     password : String,
 
 })
+const purchase = new schema({
+    purchaseId : ObjectId,
+    CourseId : ObjectId,
+    userId : ObjectId,
+
+})
  
 const userModel = mongoose.model("users", user);
 const adminModel = mongoose.model("adnmins", admin );
 const courseModel = mongoose.model("courses", course);
+const purchaseModel = mongoose.model("purchases", purchase);
 
 module.exports = {
     userModel : userModel,
     adminModel : adminModel,
-    courseModel : courseModel
+    courseModel : courseModel,
+    purchaseModel : purchaseModel
 }
